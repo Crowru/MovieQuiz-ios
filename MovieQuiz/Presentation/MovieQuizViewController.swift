@@ -118,12 +118,16 @@ final class MovieQuizViewController: UIViewController {
     
     private func showResult(quiz result: QuizResultsViewModel) {
         let alert = UIAlertController(title: result.title, message: result.text, preferredStyle: .alert)
-        let action = UIAlertAction(title: result.buttonText, style: .default) { _ in
+        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            
             self.currentQuestionIndex = 0
+            self.correctAnswers = 0
+            
             let currentQuestion = self.questions[self.currentQuestionIndex]
             let convert = self.convert(model: currentQuestion)
             self.show(quiz: convert)
-            self.correctAnswers = 0
+            
         }
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
