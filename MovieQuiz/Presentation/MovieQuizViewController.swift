@@ -5,10 +5,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
     
-    private let questionAmount = 10
+    private let questionsAmount = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenter?
+    private var statisticService: StatisticServiceProtocol?
     
     @IBOutlet weak private var textQuestionLabel: UILabel!
     @IBOutlet weak private var imageView: UIImageView!
@@ -20,9 +21,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        questionFactory = QuestionFactory(delegate: self)
         preparation()
-        
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -31,7 +30,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         guard let question else {
             return
         }
-        
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
@@ -64,7 +62,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self.noButton.isEnabled = true
             self.yesButton.isEnabled = true
         }
-        
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.currentAnswer)
        }
     
@@ -82,7 +79,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self.noButton.isEnabled = true
             self.yesButton.isEnabled = true
         }
-        
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.currentAnswer)
        }
     
@@ -91,11 +87,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func preparation() {
         imageView.layer.cornerRadius = 20
         alertPresenter = AlertPresenter(viewController: self)
+        questionFactory = QuestionFactory(delegate: self)
         questionFactory?.requestNextQuestion()
+        statisticService = StatisticServiceImplementation()
     }
     
     private func showNextQuestionOrResult() {
-        if currentQuestionIndex == questionAmount - 1 {
+        if currentQuestionIndex == questionsAmount - 1 {
             showResult()
         } else {
             currentQuestionIndex += 1
@@ -127,25 +125,39 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showResult() {
+        statisticService?.store(correct: correctAnswers, total: questionsAmount)
         
         let alertModel = AlertModel(
             title: "Этот раунд окончен!",
-            message: "Ваш результат: \(correctAnswers)/10", // можно вынести в функцию
+            message: makeResultMessage(),
             buttonText: "Сыграть ещё раз") { [weak self] in
                 self?.currentQuestionIndex = 0
                 self?.correctAnswers = 0
                 self?.questionFactory?.requestNextQuestion()
-                
             }
         alertPresenter?.show(alertModel: alertModel)
-        
     }
+    
+    private func makeResultMessage() -> String {
+         guard let statisticService = statisticService, let bestGame = statisticService.bestGame else {
+             return ""
+         }
+
+         let totalPlayCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
+         let currentGameResultLine = "Ваш результат: \(correctAnswers)/\(questionsAmount)"
+         let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
+         let bestGameInfoLine = "Рекорд: \(bestGame.correct)/10" + " (\(bestGame.date.dateTimeString))"
+         let resultMessage = [currentGameResultLine, totalPlayCountLine, bestGameInfoLine, averageAccuracyLine].joined(separator: "\n")
+         return resultMessage
+    }
+
+    // MARK: - QuestionFactoryDelegate
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
             image: UIImage(named: model.image) ?? UIImage(),
             question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questionAmount)")
+            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
         return questionStep
     }
 }

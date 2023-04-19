@@ -9,9 +9,8 @@ final class AlertPresenter: AlertProtocol {
     }
     
     func show(alertModel: AlertModel) {
-        
         let alert = UIAlertController(
-            title: alertModel.buttonText,
+            title: alertModel.title,
             message: alertModel.message,
             preferredStyle: .alert
         )
@@ -23,6 +22,4 @@ final class AlertPresenter: AlertProtocol {
         alert.addAction(action)
         viewController?.present(alert, animated: true)
     }
-    
-    
 }
