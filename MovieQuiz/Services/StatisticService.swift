@@ -2,41 +2,11 @@ import Foundation
 
 final class StatisticServiceImplementation: StatisticServiceProtocol {
 
-    func store(correct: Int, total: Int) {
-        gamesCount += 1
-        userDefaults.set(self.total + total, forKey: Keys.total.rawValue)
-        userDefaults.set(self.correct + correct, forKey: Keys.correct.rawValue)
-        if let best = bestGame, best < GameRecord(correct: correct, total: total, date: date) {
-            self.bestGame = GameRecord(correct: correct, total: total, date: date)
-        } else {
-            self.bestGame = bestGame ?? GameRecord(correct: 0, total: 0, date: Date())
-        }
-    }
-    
-    private let userDefaults: UserDefaults = .standard
-    private var date = Date()
-    
     private enum Keys: String {
         case correct, total, bestGame, gameCount
     }
     
-    private var correct: Int {
-        get {
-            userDefaults.integer(forKey: Keys.correct.rawValue)
-        }
-        set {
-            userDefaults.set(newValue, forKey: Keys.correct.rawValue)
-        }
-    }
-    
-    private var total: Int {
-        get {
-            userDefaults.integer(forKey: Keys.total.rawValue)
-        }
-        set {
-            userDefaults.set(newValue, forKey: Keys.total.rawValue)
-        }
-    }
+    private let userDefaults: UserDefaults = .standard
     
     var totalAccuracy: Double {
         guard total != 0 else {
@@ -68,6 +38,37 @@ final class StatisticServiceImplementation: StatisticServiceProtocol {
                 return
             }
             userDefaults.set(data, forKey: Keys.bestGame.rawValue)
+        }
+    }
+    
+    private var date = Date()
+    
+    private var correct: Int {
+        get {
+            userDefaults.integer(forKey: Keys.correct.rawValue)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.correct.rawValue)
+        }
+    }
+    
+    private var total: Int {
+        get {
+            userDefaults.integer(forKey: Keys.total.rawValue)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.total.rawValue)
+        }
+    }
+    
+    func store(correct: Int, total: Int) {
+        gamesCount += 1
+        self.total = self.total + total
+        self.correct = self.correct + correct
+        if let best = bestGame, best < GameRecord(correct: correct, total: total, date: date) {
+            self.bestGame = GameRecord(correct: correct, total: total, date: date)
+        } else {
+            self.bestGame = bestGame ?? GameRecord(correct: 0, total: 0, date: Date())
         }
     }
 }
