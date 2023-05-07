@@ -24,6 +24,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         super.viewDidLoad()
         preparation()
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     // MARK: - QuestionFactoryDelegate
     
@@ -39,11 +43,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     func didFailToLoadData(with error: Error) {
-        showNetworkError(message: error.localizedDescription)
+        showNetworkError(message: "Невозможно загрузить данные")
+        showLoadindIndicator()
+    }
+    
+    func didExceededLimit(error: Error) {
+        showNetworkError(message: "Превышен лимит на сервере")
+        showLoadindIndicator()
     }
     
     func didLoadDataFromServer() {
-        activityIndicator.isHidden = true // скрываем индикатор загрузки
+        hideLoadindIndicator()
         questionFactory?.requestNextQuestion()
     }
     
@@ -78,6 +88,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - initial setup
     
     private func preparation() {
+        activityIndicator.hidesWhenStopped = true
         imageView.layer.cornerRadius = 20
         alertPresenter = AlertPresenter(viewController: self)
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
@@ -101,19 +112,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         if isCorrect {
             correctAnswers += 1
         }
-
         imageView.layer.masksToBounds = true
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         imageView.layer.borderWidth = 8
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
-            guard let self else { return }
-            self.showNextQuestionOrResult()
-            self.imageView.layer.borderColor = UIColor.clear.cgColor
-        }
+        
+        showLoadindIndicator()
         noButton.isEnabled = false
         yesButton.isEnabled = false
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
             guard let self else { return }
+            self.hideLoadindIndicator()
+            self.showNextQuestionOrResult()
+            self.imageView.layer.borderColor = UIColor.clear.cgColor
             self.noButton.isEnabled = true
             self.yesButton.isEnabled = true
         }
@@ -163,13 +174,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showLoadindIndicator() {
-        activityIndicator.isHidden = false
-        activityIndicator.startAnimating()
         activityIndicator.color = .white
+        activityIndicator.startAnimating()
     }
     
     private func hideLoadindIndicator() {
-        activityIndicator.isHidden = true
         activityIndicator.stopAnimating()
     }
     
@@ -180,7 +189,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             guard let self else { return }
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
-            self.questionFactory?.requestNextQuestion()
+            self.questionFactory?.loadData()
         }
         alertPresenter?.show(alertModel: model)
     }

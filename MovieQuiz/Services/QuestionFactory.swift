@@ -17,8 +17,14 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 guard let self = self else { return }
                 switch result {
                 case .success(let mostPopularMovies):
-                    self.movies = mostPopularMovies.items
-                    self.delegate?.didLoadDataFromServer()
+                    if mostPopularMovies.errorMessage.isEmpty {
+                        self.movies = mostPopularMovies.items
+                        self.delegate?.didLoadDataFromServer()
+                    } else {
+                        let errorMessage = mostPopularMovies.errorMessage
+                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+                        self.delegate?.didExceededLimit(error: error)
+                    }
                 case .failure(let error):
                     self.delegate?.didFailToLoadData(with: error)
                 }
@@ -38,6 +44,10 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 imageData = try Data(contentsOf: movie.resizedImageURL)
             } catch {
                 print("Failed to load image")
+                DispatchQueue.main.async { [weak self] in
+                    self?.delegate?.didFailToLoadData(with: error)
+                }
+                return
             }
 
             let rating = Float(movie.rating) ?? 0
