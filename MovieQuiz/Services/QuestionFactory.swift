@@ -9,6 +9,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
     
     private let moviewLoader: MoviesLoadingProtocol
     private weak var delegate: QuestionFactoryDelegate?
+    private weak var delegate2: QuestionFactory?
     private var movies: [MostPopularMovie] = []
     
     init(moviesLoader: MoviesLoadingProtocol, delegate: QuestionFactoryDelegate?) {
@@ -26,9 +27,6 @@ final class QuestionFactory: QuestionFactoryProtocol {
                         self.movies = mostPopularMovies.items
                         self.delegate?.didLoadDataFromServer()
                     } else {
-//                        let errorMessage = mostPopularMovies.errorMessage
-//                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
-//                        self.delegate?.didExceededLimit(error: error)
                         self.delegate?.didExceededLimit(error: GameError.exceededLimitError)
                     }
                 case .failure(let error):
