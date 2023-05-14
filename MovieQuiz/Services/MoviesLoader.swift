@@ -1,15 +1,15 @@
 import Foundation
 
-protocol MoviesLoadingProtocol {
-    func loadMovies(handler: @escaping (Result<MostPopularMovies, Error>) -> Void)
-}
-
 struct MoviesLoader: MoviesLoadingProtocol {
     // MARK: - NetworkClient
-    private let networkClient = NetworkClient()
+    private let networkClient: NetworkRoutingProtocol
+    
+    init(networkClient: NetworkRoutingProtocol = NetworkClient()) {
+        self.networkClient = networkClient
+    }
     
     // MARK: - imDb-Key
-    private let imDbKey = "k_w9ynz3tw"
+    private let imDbKey = "k_w9ynz3tw" // k_j8f1robq k_w9ynz3tw - моя 
     
     // MARK: - NetworkClient
     private var mostPopularMoviesUrl: URL {

@@ -2,6 +2,11 @@ import Foundation
 
 final class QuestionFactory: QuestionFactoryProtocol {
     
+    enum GameError: Error {
+        case imageLoadingError
+        case exceededLimitError
+    }
+    
     private let moviewLoader: MoviesLoadingProtocol
     private weak var delegate: QuestionFactoryDelegate?
     private var movies: [MostPopularMovie] = []
@@ -21,9 +26,10 @@ final class QuestionFactory: QuestionFactoryProtocol {
                         self.movies = mostPopularMovies.items
                         self.delegate?.didLoadDataFromServer()
                     } else {
-                        let errorMessage = mostPopularMovies.errorMessage
-                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
-                        self.delegate?.didExceededLimit(error: error)
+//                        let errorMessage = mostPopularMovies.errorMessage
+//                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+//                        self.delegate?.didExceededLimit(error: error)
+                        self.delegate?.didExceededLimit(error: GameError.exceededLimitError)
                     }
                 case .failure(let error):
                     self.delegate?.didFailToLoadData(with: error)
