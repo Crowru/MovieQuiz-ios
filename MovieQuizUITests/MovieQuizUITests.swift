@@ -10,8 +10,6 @@ final class MovieQuizUITests: XCTestCase {
         app = XCUIApplication()
         app.launch()
         
-        // это специальная настройка для тестов: если один тест не прошёл,
-        // то следующие тесты запускаться не будут; и правда, зачем ждать?
         continueAfterFailure = false
     }
     
@@ -30,18 +28,17 @@ final class MovieQuizUITests: XCTestCase {
     func testYesButton() {
         sleep(2 )
         
-        let firstPoster = app.images["Poster"] // находим первоначальный постер
+        let firstPoster = app.images["Poster"]
         let firstPosterData = firstPoster.screenshot().pngRepresentation
         let firstQuestion = app.staticTexts["question"]
         
-        app.buttons["Yes"].tap() // находим да и нажимаем её
+        app.buttons["Yes"].tap()
         sleep(2)
         
-        let secondPoster = app.images["Poster"] // еще раз находим постер
+        let secondPoster = app.images["Poster"]
         let secondPosterData = secondPoster.screenshot().pngRepresentation
         let secondQuestion = app.staticTexts["question"]
         
-        // XCTAssertFalse(firstPosterData == secondPosterData)
         XCTAssertNotEqual(firstPosterData, secondPosterData)
         
         let indexLabel = app.staticTexts["index"]
@@ -52,18 +49,17 @@ final class MovieQuizUITests: XCTestCase {
     func testNoButton() {
         sleep(2)
         
-        let firstPoster = app.images["Poster"] // находим первоначальный постер
+        let firstPoster = app.images["Poster"]
         let firstPosterData = firstPoster.screenshot().pngRepresentation
         let firstQuestion = app.staticTexts["question"]
         
-        app.buttons["No"].tap() // находим да и нажимаем её
+        app.buttons["No"].tap()
         sleep(2)
         
-        let secondPoster = app.images["Poster"] // еще раз находим постер
+        let secondPoster = app.images["Poster"]
         let secondPosterData = secondPoster.screenshot().pngRepresentation
         let secondQuestion = app.staticTexts["question"]
         
-        // XCTAssertFalse(firstPosterData == secondPosterData)
         XCTAssertNotEqual(firstPosterData, secondPosterData)
         
         let indexLabel = app.staticTexts["index"]

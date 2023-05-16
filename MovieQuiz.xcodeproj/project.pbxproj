@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A302C7E2A14058C0079B8E0 /* LocalizationSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A302C7D2A14058C0079B8E0 /* LocalizationSystem.swift */; };
 		2A6804A82A09187B0040C273 /* MovieQuizTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6804A72A09187B0040C273 /* MovieQuizTests.swift */; };
 		2A6804B02A0928B80040C273 /* ArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6804AE2A0928B40040C273 /* ArrayTests.swift */; };
 		2A6804B22A0938A80040C273 /* NetworkRoutingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6804B12A0938A80040C273 /* NetworkRoutingProtocol.swift */; };
@@ -68,6 +69,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2A302C7D2A14058C0079B8E0 /* LocalizationSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationSystem.swift; sourceTree = "<group>"; };
+		2A302C7F2A14073F0079B8E0 /* en-001 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-001"; path = "en-001.lproj/Main.strings"; sourceTree = "<group>"; };
+		2A302C802A14073F0079B8E0 /* en-001 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-001"; path = "en-001.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		2A302C812A1407C20079B8E0 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		2A302C822A1407C30079B8E0 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		2A6804A52A09187B0040C273 /* MovieQuizTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieQuizTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A6804A72A09187B0040C273 /* MovieQuizTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieQuizTests.swift; sourceTree = "<group>"; };
 		2A6804AE2A0928B40040C273 /* ArrayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayTests.swift; sourceTree = "<group>"; };
@@ -141,6 +147,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A302C7C2A1405570079B8E0 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				2A302C7D2A14058C0079B8E0 /* LocalizationSystem.swift */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
 		2A6804A62A09187B0040C273 /* MovieQuizTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -201,10 +215,10 @@
 			isa = PBXGroup;
 			children = (
 				AD1ABAB52831907B00B3E448 /* MovieQuizViewController.swift */,
+				2A6AF6542A119E930052BA5E /* MovieQuizViewControllerProtocol.swift */,
 				2A6AF6522A1126300052BA5E /* MovieQuizPresenter.swift */,
 				2ABC89EB29E98361003C136B /* AlertPresenter.swift */,
 				2ABC89ED29E99184003C136B /* AlertProtocol.swift */,
-				2A6AF6542A119E930052BA5E /* MovieQuizViewControllerProtocol.swift */,
 				AD1ABAB72831907B00B3E448 /* Main.storyboard */,
 			);
 			path = Presentation;
@@ -213,6 +227,7 @@
 		8F4738332848DE46005DF65E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2A302C7C2A1405570079B8E0 /* Localization */,
 				2A92F7CE29CE363300DA5C8F /* Founts */,
 				AD1ABABC2831907F00B3E448 /* LaunchScreen.storyboard */,
 				AD1ABABA2831907F00B3E448 /* Assets.xcassets */,
@@ -375,6 +390,8 @@
 			knownRegions = (
 				en,
 				Base,
+				"en-001",
+				ru,
 			);
 			mainGroup = AD1ABAA52831907B00B3E448;
 			productRefGroup = AD1ABAAF2831907B00B3E448 /* Products */;
@@ -467,6 +484,7 @@
 				2A79B0072A06D25E00BC3445 /* MoviesLoader.swift in Sources */,
 				2AE401CB29E74F2200AC05D7 /* QuestionFactoryDelegate.swift in Sources */,
 				2A73A14F29F0349D00537C02 /* StatisticService.swift in Sources */,
+				2A302C7E2A14058C0079B8E0 /* LocalizationSystem.swift in Sources */,
 				AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */,
 				2AB2B75D29E5A55F0006E3DF /* QuizStepViewModel.swift in Sources */,
 				2A6AF6532A1126300052BA5E /* MovieQuizPresenter.swift in Sources */,
@@ -508,6 +526,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				AD1ABAB82831907B00B3E448 /* Base */,
+				2A302C7F2A14073F0079B8E0 /* en-001 */,
+				2A302C812A1407C20079B8E0 /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -516,6 +536,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				AD1ABABD2831907F00B3E448 /* Base */,
+				2A302C802A14073F0079B8E0 /* en-001 */,
+				2A302C822A1407C30079B8E0 /* ru */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -645,6 +667,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -705,6 +728,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -770,7 +794,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -800,7 +824,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -38,10 +38,11 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     
     func showResult() {
+        hideLoadingIndicator()
         let alertModel = AlertModel(
-            title: "Этот раунд окончен!",
+            title: presenter.makeTitleMessage(),
             message: presenter.makeResultMessage(),
-            buttonText: "Сыграть ещё раз") { [weak self] in
+            buttonText: presenter.makeButtonMessage() ) { [weak self] in
                 self?.showLoadingIndicator()
                 self?.presenter.restartGame()
             }
@@ -55,6 +56,50 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         imageView.layer.borderColor = UIColor.clear.cgColor
         noButton.isEnabled = true
         yesButton.isEnabled = true
+        hideLoadingIndicator()
+    }
+    
+    // MARK: - NetworkError
+    
+    func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        
+        let model = AlertModel(title: presenter.makeTitleMessageForError(), message: message, buttonText: presenter.makeButtonMessageForError() ) { [weak self] in
+            guard let self else { return }
+            self.showLoadingIndicator()
+            self.presenter.restartGame()
+        }
+        alertPresenter?.show(alertModel: model)
+    }
+    
+    // MARK: - yes/no button action
+    
+    @IBAction private func noButtonAction(_ sender: UIButton) {
+        if !presenter.hideLoadingForLastQuestion() {
+            showLoadingIndicator()
+        }
+        presenter.noButtonTapped()
+    }
+    
+    @IBAction private func yesButtonAction(_ sender: UIButton) {
+        showLoadingIndicator()
+        presenter.yesButtonTapped()
+    }
+}
+
+    // MARK: - Private extention
+
+private extension MovieQuizViewController {
+    
+    // MARK: - initial setup
+    
+    func preparation() {
+        activityIndicator.hidesWhenStopped = true
+        imageView.layer.cornerRadius = 20
+        alertPresenter = AlertPresenter(viewController: self)
+        showLoadingIndicator()
+        presenter = MovieQuizPresenter(viewController: self)
+        activityIndicator.color = .white
     }
     
     // MARK: - Loading Indicator
@@ -65,38 +110,5 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     func hideLoadingIndicator() {
         activityIndicator.stopAnimating()
-    }
-    
-    // MARK: - NetworkError
-    
-    func showNetworkError(message: String) {
-        hideLoadingIndicator()
-        
-        let model = AlertModel(title: "Ошибка", message: message, buttonText: "Попробовать ещё раз") { [weak self] in
-            guard let self else { return }
-            self.presenter.restartGame()
-        }
-        alertPresenter?.show(alertModel: model)
-    }
-    
-    // MARK: - yes/no button action
-    
-    @IBAction private func noButtonAction(_ sender: UIButton) {
-        presenter.noButtonTapped()
-    }
-    
-    @IBAction private func yesButtonAction(_ sender: UIButton) {
-        presenter.yesButtonTapped()
-    }
-    
-    // MARK: - initial setup
-    
-    private func preparation() {
-        activityIndicator.hidesWhenStopped = true
-        imageView.layer.cornerRadius = 20
-        alertPresenter = AlertPresenter(viewController: self)
-        showLoadingIndicator()
-        presenter = MovieQuizPresenter(viewController: self)
-        activityIndicator.color = .white
     }
 }

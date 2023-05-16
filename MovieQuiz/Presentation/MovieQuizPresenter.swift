@@ -9,13 +9,13 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     private var correctAnswers = 0
     private var currentQuestion: QuizQuestion?
     private weak var viewController: MovieQuizViewControllerProtocol?
+    private var isRu: Bool = LocalizationSystem.sharedInstance.getLanguage() == "ru"
     
     init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         statisticService = StatisticServiceImplementation()
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory?.loadData()
-        self.viewController?.showLoadingIndicator()
     }
     
     func isLastQuestion() -> Bool {
@@ -30,6 +30,10 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     func switchToNextQuestion() {
         currentQuestionIndex += 1
+    }
+    
+    func hideLoadingForLastQuestion() -> Bool {
+        currentQuestionIndex == 9
     }
     
     func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -48,24 +52,20 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
             self?.viewController?.show(quiz: viewModel)
-            self?.viewController?.hideLoadingIndicator()
         }
     }
     
     // MARK: - QuestionFactoryDelegate
     
     func didFailToLoadData(with error: Error) {
-        viewController?.showNetworkError(message: "Невозможно загрузить данные")
-        viewController?.showLoadingIndicator()
+        viewController?.showNetworkError(message: isRu ? "Невозможно загрузить данные" : "Unable to upload data")
     }
     
     func didExceededLimit(error: Error) {
-        viewController?.showNetworkError(message: "Превышен лимит на сервере")
-        viewController?.showLoadingIndicator()
+        viewController?.showNetworkError(message: isRu ? "Превышен лимит на сервере" : "Exceeded the limit on the server")
     }
     
     func didLoadDataFromServer() {
-        viewController?.hideLoadingIndicator()
         questionFactory?.requestNextQuestion()
     }
     
@@ -74,12 +74,33 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
             return ""
         }
         
-        let totalPlayCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-        let currentGameResultLine = "Ваш результат: \(correctAnswers)/\(questionsAmount)"
-        let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
-        let bestGameInfoLine = "Рекорд: \(bestGame.correct)/10" + " (\(bestGame.date.dateTimeString))"
+        let totalPlayCountLine = isRu ? "Количество сыгранных квизов: \(statisticService.gamesCount)" : "Number of quizzes played: \(statisticService.gamesCount)"
+        let currentGameResultLine = isRu ? "Ваш результат: \(correctAnswers)/\(questionsAmount)" : "Your result: \(correctAnswers)/\(questionsAmount)"
+        let averageAccuracyLine = isRu ? "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%" : "Average accuracy: \(String(format: "%.2f", statisticService.totalAccuracy))%"
+        let bestGameInfoLine = isRu ? "Рекорд: \(bestGame.correct)/10 (\(bestGame.date.dateTimeString))" : "Record: \(bestGame.correct)/10 (\(bestGame.date.dateTimeString))"
         let resultMessage = [currentGameResultLine, totalPlayCountLine, bestGameInfoLine, averageAccuracyLine].joined(separator: "\n")
+        
         return resultMessage
+    }
+    
+    func makeTitleMessage() -> String {
+        let titleMessage = isRu ? "Этот раунд окончен!" : "This round is over!"
+        return titleMessage
+    }
+    
+    func makeButtonMessage() -> String {
+        let buttonMessage = isRu ? "Сыграть ещё раз" : "Play again"
+        return buttonMessage
+    }
+    
+    func makeTitleMessageForError() -> String {
+        let buttonMessage = isRu ? "Ошибка" : "Error"
+        return buttonMessage
+    }
+    
+    func makeButtonMessageForError() -> String {
+        let buttonMessage = isRu ? "Попробовать ещё раз" : "Try again"
+        return buttonMessage
     }
     
     // MARK: - Yes/No button logic
@@ -116,14 +137,9 @@ private extension MovieQuizPresenter {
             didAnswer(isCorrectAnswer: isCorrect)
         }
         viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
-        
-        if currentQuestionIndex != 9 {
-            viewController?.showLoadingIndicator()
-        }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self else { return }
-            self.viewController?.hideLoadingIndicator()
             self.proceedToNextQuestionOrResults()
         }
     }
