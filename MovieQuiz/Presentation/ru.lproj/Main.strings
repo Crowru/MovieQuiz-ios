@@ -1,0 +1,9 @@
+
+/* Class = "UILabel"; text = "Вопрос:"; ObjectID = "K5h-0H-blU"; */
+"K5h-0H-blU.text" = "Вопрос:";
+
+/* Class = "UIButton"; normalTitle = "Да"; ObjectID = "Lpl-t1-HtF"; */
+"Lpl-t1-HtF.normalTitle" = "Да";
+
+/* Class = "UIButton"; normalTitle = "Нет"; ObjectID = "v6G-pK-guy"; */
+"v6G-pK-guy.normalTitle" = "Нет";

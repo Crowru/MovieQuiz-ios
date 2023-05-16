@@ -2,9 +2,15 @@ import Foundation
 
 final class QuestionFactory: QuestionFactoryProtocol {
     
+    enum GameError: Error {
+        case imageLoadingError
+        case exceededLimitError
+    }
+    
     private let moviewLoader: MoviesLoadingProtocol
     private weak var delegate: QuestionFactoryDelegate?
     private var movies: [MostPopularMovie] = []
+    private var isRu: Bool = LocalizationSystem.sharedInstance.getLanguage() == "ru"
     
     init(moviesLoader: MoviesLoadingProtocol, delegate: QuestionFactoryDelegate?) {
         self.moviewLoader = moviesLoader
@@ -21,9 +27,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
                         self.movies = mostPopularMovies.items
                         self.delegate?.didLoadDataFromServer()
                     } else {
-                        let errorMessage = mostPopularMovies.errorMessage
-                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
-                        self.delegate?.didExceededLimit(error: error)
+                        self.delegate?.didExceededLimit(error: GameError.exceededLimitError)
                     }
                 case .failure(let error):
                     self.delegate?.didFailToLoadData(with: error)
@@ -49,13 +53,13 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 }
                 return
             }
-
+            
             let rating = Float(movie.rating) ?? 0
             
             let randomRating = (5...9).randomElement() ?? 5
             let moreThan = Bool.random()
             
-            let text  = "Рейтинг этого фильма \(moreThan ? "больше" : "меньше") чем \(randomRating)?"
+            let text = self.isRu ? "Рейтинг этого фильма \(moreThan ? "больше" : "меньше") чем \(randomRating)?" : "Is the rating of this movie \(moreThan ? "more" : "less") than \(randomRating)?"
             let correctAnswer = moreThan ? rating > Float(randomRating) : rating < Float(randomRating)
             
             let question = QuizQuestion(image: imageData,

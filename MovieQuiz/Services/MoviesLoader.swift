@@ -1,17 +1,21 @@
 import Foundation
 
-protocol MoviesLoadingProtocol {
-    func loadMovies(handler: @escaping (Result<MostPopularMovies, Error>) -> Void)
-}
-
 struct MoviesLoader: MoviesLoadingProtocol {
+    
     // MARK: - NetworkClient
-    private let networkClient = NetworkClient()
+    
+    private let networkClient: NetworkRoutingProtocol
+    
+    init(networkClient: NetworkRoutingProtocol = NetworkClient()) {
+        self.networkClient = networkClient
+    }
     
     // MARK: - imDb-Key
+    
     private let imDbKey = "k_w9ynz3tw"
     
     // MARK: - NetworkClient
+    
     private var mostPopularMoviesUrl: URL {
         guard let url = URL(string: "https://imdb-api.com/en/API/Top250Movies/\(imDbKey)") else {
             preconditionFailure("Unable to construct mostPopularMoviesUrl")

@@ -14,11 +14,11 @@ final class AlertPresenter: AlertProtocol {
             message: alertModel.message,
             preferredStyle: .alert
         )
+        alert.view.accessibilityIdentifier = "Game result"
         
         let action = UIAlertAction(title: alertModel.buttonText, style: .default) { _ in
             alertModel.completion()
         }
-        
         alert.addAction(action)
         viewController?.present(alert, animated: true)
     }
