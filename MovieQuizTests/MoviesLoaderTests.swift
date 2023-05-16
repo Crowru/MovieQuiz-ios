@@ -4,7 +4,7 @@ import XCTest
 struct StubNetworkClient: NetworkRoutingProtocol {
     
     enum TestError: Error { // тестовая ошибка
-    case test
+        case test
     }
     
     let emulateError: Bool // этот параметр нужен, чтобы заглушка эмулировала либо ошибку сети, либо успешный ответ
@@ -49,7 +49,7 @@ struct StubNetworkClient: NetworkRoutingProtocol {
                 ]
               }
             """.data(using: .utf8) ?? Data()
-        }
+    }
     // Здесь expectedResponse — заранее созданный тестовый ответ от сервера в формате Data. То есть теперь мы всегда знаем, чего ожидать в ответе от сервера.
 }
 

@@ -9,7 +9,7 @@ struct MoviesLoader: MoviesLoadingProtocol {
     }
     
     // MARK: - imDb-Key
-    private let imDbKey = "k_w9ynz3tw" // k_j8f1robq k_w9ynz3tw - моя 
+    private let imDbKey = "k_w9ynz3tw"
     
     // MARK: - NetworkClient
     private var mostPopularMoviesUrl: URL {

@@ -40,7 +40,7 @@ final class MovieQuizPresenterTests: XCTestCase {
         let emptyData = Data()
         let question = QuizQuestion(image: emptyData, text: "Question Text", currentAnswer: true)
         let viewModel = presenter.convert(model: question)
-            
+        
         XCTAssertNotNil(viewModel.image)
         XCTAssertEqual(viewModel.question, "Question Text")
         XCTAssertEqual(viewModel.questionNumber, "1/10")

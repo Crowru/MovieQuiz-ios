@@ -1,7 +1,7 @@
 import Foundation
 
 final class StatisticServiceImplementation: StatisticServiceProtocol {
-
+    
     private enum Keys: String {
         case correct, total, bestGame, gameCount
     }

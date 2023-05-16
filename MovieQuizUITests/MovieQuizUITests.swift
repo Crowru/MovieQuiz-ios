@@ -3,7 +3,7 @@ import XCTest
 var app: XCUIApplication!
 
 final class MovieQuizUITests: XCTestCase {
-
+    
     override func setUpWithError() throws {
         try super.setUpWithError()
         
@@ -14,14 +14,14 @@ final class MovieQuizUITests: XCTestCase {
         // то следующие тесты запускаться не будут; и правда, зачем ждать?
         continueAfterFailure = false
     }
-
+    
     override func tearDownWithError() throws {
         try super.tearDownWithError()
         
         app.terminate()
         app = nil
     }
-
+    
     func testExample() throws {
         let app = XCUIApplication()
         app.launch()
@@ -76,7 +76,7 @@ final class MovieQuizUITests: XCTestCase {
         let noButton = app.buttons["No"]
         let numberOfTaps: UInt8 = 10
         let alert = app.alerts["Game result"]
-
+        
         sleep(2)
         
         for _ in 1...numberOfTaps {

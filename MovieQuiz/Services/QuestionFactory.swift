@@ -9,7 +9,6 @@ final class QuestionFactory: QuestionFactoryProtocol {
     
     private let moviewLoader: MoviesLoadingProtocol
     private weak var delegate: QuestionFactoryDelegate?
-    private weak var delegate2: QuestionFactory?
     private var movies: [MostPopularMovie] = []
     
     init(moviesLoader: MoviesLoadingProtocol, delegate: QuestionFactoryDelegate?) {
@@ -53,7 +52,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 }
                 return
             }
-
+            
             let rating = Float(movie.rating) ?? 0
             
             let randomRating = (5...9).randomElement() ?? 5

@@ -48,6 +48,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
             self?.viewController?.show(quiz: viewModel)
+            self?.viewController?.hideLoadingIndicator()
         }
     }
     
@@ -69,33 +70,38 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func makeResultMessage() -> String {
-         guard let statisticService = statisticService, let bestGame = statisticService.bestGame else {
-             return ""
-         }
-
-         let totalPlayCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-         let currentGameResultLine = "Ваш результат: \(correctAnswers)/\(questionsAmount)"
-         let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
-         let bestGameInfoLine = "Рекорд: \(bestGame.correct)/10" + " (\(bestGame.date.dateTimeString))"
-         let resultMessage = [currentGameResultLine, totalPlayCountLine, bestGameInfoLine, averageAccuracyLine].joined(separator: "\n")
-         return resultMessage
+        guard let statisticService = statisticService, let bestGame = statisticService.bestGame else {
+            return ""
+        }
+        
+        let totalPlayCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
+        let currentGameResultLine = "Ваш результат: \(correctAnswers)/\(questionsAmount)"
+        let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
+        let bestGameInfoLine = "Рекорд: \(bestGame.correct)/10" + " (\(bestGame.date.dateTimeString))"
+        let resultMessage = [currentGameResultLine, totalPlayCountLine, bestGameInfoLine, averageAccuracyLine].joined(separator: "\n")
+        return resultMessage
     }
     
-    // MARK: - yes/no button logic
+    // MARK: - Yes/No button logic
     
     func noButtonTapped() {
         didAnswer(isYes: false)
-       }
+    }
     
     func yesButtonTapped() {
         didAnswer(isYes: true)
-       }
+    }
+}
+
+    // MARK: - Private extention
+
+private extension MovieQuizPresenter {
     
-    private func didAnswer(isCorrectAnswer: Bool) {
+    func didAnswer(isCorrectAnswer: Bool) {
         correctAnswers += 1
     }
     
-    private func proceedToNextQuestionOrResults() {
+    func proceedToNextQuestionOrResults() {
         if isLastQuestion() {
             statisticService?.store(correct: correctAnswers, total: questionsAmount)
             viewController?.showResult()
@@ -105,12 +111,15 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
-    private func proceedWithAnswer(isCorrect: Bool) {
+    func proceedWithAnswer(isCorrect: Bool) {
         if isCorrect {
             didAnswer(isCorrectAnswer: isCorrect)
         }
         viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
-        viewController?.showLoadingIndicator()
+        
+        if currentQuestionIndex != 9 {
+            viewController?.showLoadingIndicator()
+        }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self else { return }
@@ -119,7 +128,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
-    private func didAnswer(isYes: Bool) {
+    func didAnswer(isYes: Bool) {
         guard let currentQuestion else {
             return
         }

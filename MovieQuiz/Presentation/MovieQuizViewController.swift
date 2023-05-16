@@ -18,13 +18,13 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         super.viewDidLoad()
         preparation()
     }
-
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
-    presenter.didReceiveNextQuestion(question: question)
+        presenter.didReceiveNextQuestion(question: question)
     }
     
     // MARK: - The logic of choosing an action
@@ -42,6 +42,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             title: "Этот раунд окончен!",
             message: presenter.makeResultMessage(),
             buttonText: "Сыграть ещё раз") { [weak self] in
+                self?.showLoadingIndicator()
                 self?.presenter.restartGame()
             }
         alertPresenter?.show(alertModel: alertModel)
@@ -59,7 +60,6 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     // MARK: - Loading Indicator
     
     func showLoadingIndicator() {
-        activityIndicator.color = .white
         activityIndicator.startAnimating()
     }
     
@@ -97,5 +97,6 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         alertPresenter = AlertPresenter(viewController: self)
         showLoadingIndicator()
         presenter = MovieQuizPresenter(viewController: self)
+        activityIndicator.color = .white
     }
 }

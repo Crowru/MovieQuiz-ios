@@ -204,8 +204,8 @@
 				2A6AF6522A1126300052BA5E /* MovieQuizPresenter.swift */,
 				2ABC89EB29E98361003C136B /* AlertPresenter.swift */,
 				2ABC89ED29E99184003C136B /* AlertProtocol.swift */,
-				AD1ABAB72831907B00B3E448 /* Main.storyboard */,
 				2A6AF6542A119E930052BA5E /* MovieQuizViewControllerProtocol.swift */,
+				AD1ABAB72831907B00B3E448 /* Main.storyboard */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
