@@ -82,7 +82,9 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     
     @IBAction private func yesButtonAction(_ sender: UIButton) {
-        showLoadingIndicator()
+        if !presenter.hideLoadingForLastQuestion() {
+            showLoadingIndicator()
+        }
         presenter.yesButtonTapped()
     }
 }
