@@ -67,7 +67,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         let model = AlertModel(title: presenter.makeTitleMessageForError(), message: message, buttonText: presenter.makeButtonMessageForError() ) { [weak self] in
             guard let self else { return }
             self.showLoadingIndicator()
-            self.presenter.restartGame()
+            self.presenter.loadData()
         }
         alertPresenter?.show(alertModel: model)
     }

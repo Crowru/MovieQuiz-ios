@@ -31,6 +31,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
                     }
                 case .failure(let error):
                     self.delegate?.didFailToLoadData(with: error)
+                    
                 }
             }
         }

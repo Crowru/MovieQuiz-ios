@@ -69,6 +69,10 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         questionFactory?.requestNextQuestion()
     }
     
+    func loadData() {
+        questionFactory?.loadData()
+    }
+    
     func makeResultMessage() -> String {
         guard let statisticService = statisticService, let bestGame = statisticService.bestGame else {
             return ""
