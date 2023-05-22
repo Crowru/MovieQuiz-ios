@@ -11,6 +11,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     private var presenter: MovieQuizPresenter!
     private var alertPresenter: AlertPresenter!
+    private var isButtonEnabled = true
     
     // MARK: - ViewDidLoad
     
@@ -57,6 +58,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         noButton.isEnabled = true
         yesButton.isEnabled = true
         hideLoadingIndicator()
+        isButtonEnabled = true
     }
     
     // MARK: - NetworkError
@@ -74,18 +76,22 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     // MARK: - yes/no button action
     
-    @IBAction private func noButtonAction(_ sender: UIButton) {
-        if !presenter.hideLoadingForLastQuestion() {
+    @IBAction private func buttonsTapped(_ sender: UIButton) {
+        guard isButtonEnabled else {
+            return
+        }
+        
+        isButtonEnabled = false
+        
+        if presenter.hideLoadingForLastQuestion() {
             showLoadingIndicator()
         }
-        presenter.noButtonTapped()
-    }
-    
-    @IBAction private func yesButtonAction(_ sender: UIButton) {
-        if !presenter.hideLoadingForLastQuestion() {
-            showLoadingIndicator()
+        
+        if sender == yesButton {
+            presenter.yesButtonTapped()
+        } else if sender == noButton {
+            presenter.noButtonTapped()
         }
-        presenter.yesButtonTapped()
     }
 }
 

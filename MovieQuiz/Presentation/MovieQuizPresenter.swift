@@ -33,7 +33,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func hideLoadingForLastQuestion() -> Bool {
-        currentQuestionIndex == 9
+        currentQuestionIndex != 9
     }
     
     func convert(model: QuizQuestion) -> QuizStepViewModel {
